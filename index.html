@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ролан Ибраев — Мастер Коуч, Астана</title>
+  <meta name="description" content="Ролан Ибраев — Мастер Коуч в Астане. Индивидуальные коучинговые сессии для руководителей, предпринимателей и специалистов. Запишитесь на бесплатную консультацию." />
+  <meta name="keywords" content="коуч Астана, мастер коуч, коучинг, личностный рост, бизнес коуч, Ролан Ибраев" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --sage: #7d9b76;
+      --sage-light: #a8c1a1;
+      --sage-dark: #4a6b43;
+      --cream: #f5f0e8;
+      --cream-dark: #ede6d6;
+      --dark-green: #1e3320;
+      --text: #2d2d2d;
+      --text-light: #6b6b6b;
+      --white: #ffffff;
+      --transition: 0.3s ease;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Jost', sans-serif;
+      font-weight: 300;
+      color: var(--text);
+      background: var(--cream);
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 400;
+    }
+
+    /* ── NAVIGATION ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 0 5%;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      background: rgba(245, 240, 232, 0.85);
+      border-bottom: 1px solid rgba(125, 155, 118, 0.2);
+      transition: box-shadow var(--transition);
+    }
+
+    nav.scrolled { box-shadow: 0 2px 20px rgba(30, 51, 32, 0.1); }
+
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.25rem;
+      font-weight: 500;
+      color: var(--dark-green);
+      text-decoration: none;
+      letter-spacing: 0.03em;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--text);
+      font-size: 0.9rem;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      transition: color var(--transition);
+    }
+
+    .nav-links a:hover { color: var(--sage-dark); }
+
+    .btn {
+      display: inline-block;
+      padding: 0.65rem 1.6rem;
+      border-radius: 2px;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all var(--transition);
+      border: none;
+    }
+
+    .btn-primary {
+      background: var(--sage-dark);
+      color: var(--white);
+    }
+
+    .btn-primary:hover { background: var(--dark-green); }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--dark-green);
+      border: 1px solid var(--sage-dark);
+    }
+
+    .btn-ghost:hover {
+      background: var(--sage-dark);
+      color: var(--white);
+    }
+
+    .btn-sm { padding: 0.5rem 1.2rem; font-size: 0.8rem; }
+
+    /* Hamburger */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--dark-green);
+      transition: all var(--transition);
+    }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      padding: 120px 5% 80px;
+      display: flex;
+      align-items: center;
+      background: linear-gradient(135deg, var(--cream) 0%, var(--cream-dark) 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    #hero::before {
+      content: '';
+      position: absolute;
+      top: -20%;
+      right: -10%;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(125,155,118,0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .hero-text { opacity: 0; transform: translateY(30px); }
+    .hero-text.visible { animation: fadeUp 0.8s ease forwards; }
+
+    .hero-tag {
+      display: inline-block;
+      font-size: 0.8rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--sage-dark);
+      border: 1px solid var(--sage);
+      padding: 0.3rem 0.9rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-title {
+      font-size: clamp(2.8rem, 5vw, 4.5rem);
+      line-height: 1.1;
+      color: var(--dark-green);
+      margin-bottom: 1rem;
+      font-style: italic;
+    }
+
+    .hero-subtitle {
+      font-size: 1rem;
+      color: var(--text-light);
+      margin-bottom: 2rem;
+      line-height: 1.7;
+      max-width: 440px;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 3rem;
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .stat {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .stat-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--dark-green);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      color: var(--text-light);
+      letter-spacing: 0.05em;
+      margin-top: 0.2rem;
+    }
+
+    .hero-photo {
+      display: flex;
+      justify-content: center;
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    .hero-photo.visible { animation: fadeUp 0.8s ease 0.2s forwards; }
+
+    .photo-placeholder {
+      width: 420px;
+      max-width: 100%;
+      aspect-ratio: 3/4;
+      background: linear-gradient(160deg, var(--sage-light) 0%, var(--sage-dark) 100%);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      color: rgba(255,255,255,0.7);
+      letter-spacing: 0.1em;
+      font-style: italic;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .photo-placeholder::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(30,51,32,0.4) 0%, transparent 50%);
+    }
+
+    .photo-name {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1;
+      text-align: center;
+      color: var(--white);
+      font-family: 'Cormorant Garamond', serif;
+    }
+
+    .photo-name strong { display: block; font-size: 1.4rem; font-weight: 500; }
+    .photo-name span { font-size: 0.85rem; opacity: 0.85; }
+
+    /* ── SECTIONS COMMON ── */
+    section { padding: 100px 5%; }
+
+    .section-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-tag {
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--sage-dark);
+      margin-bottom: 0.75rem;
+    }
+
+    .section-title {
+      font-size: clamp(2rem, 4vw, 3rem);
+      color: var(--dark-green);
+      margin-bottom: 1.5rem;
+      line-height: 1.2;
+    }
+
+    /* ── ABOUT ── */
+    #about { background: var(--cream); }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: center;
+    }
+
+    .about-text p {
+      color: var(--text-light);
+      line-height: 1.9;
+      margin-bottom: 1.2rem;
+      font-size: 0.95rem;
+    }
+
+    .about-perks {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .perk {
+      padding: 1.5rem;
+      background: var(--cream-dark);
+      border-left: 3px solid var(--sage);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.5s ease;
+    }
+
+    .perk.visible { opacity: 1; transform: translateY(0); }
+
+    .perk-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      color: var(--dark-green);
+      margin-bottom: 0.4rem;
+    }
+
+    .perk p { font-size: 0.85rem; color: var(--text-light); line-height: 1.6; margin: 0; }
+
+    .about-image {
+      background: linear-gradient(160deg, var(--cream-dark) 0%, var(--sage-light) 100%);
+      border-radius: 4px;
+      aspect-ratio: 4/5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      color: rgba(74,107,67,0.5);
+      font-style: italic;
+    }
+
+    /* ── SERVICES ── */
+    #services {
+      background: var(--dark-green);
+      color: var(--cream);
+    }
+
+    #services .section-tag { color: var(--sage-light); }
+    #services .section-title { color: var(--cream); }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+
+    .service-card {
+      padding: 2.5rem;
+      border: 1px solid rgba(168,193,161,0.2);
+      border-radius: 4px;
+      transition: all var(--transition);
+      cursor: default;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    .service-card.visible { opacity: 1; transform: translateY(0); }
+    .service-card:hover { border-color: var(--sage-light); background: rgba(125,155,118,0.08); }
+
+    .service-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: rgba(125,155,118,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+      font-size: 1.4rem;
+    }
+
+    .service-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      color: var(--cream);
+      margin-bottom: 0.75rem;
+    }
+
+    .service-desc {
+      font-size: 0.85rem;
+      color: rgba(245,240,232,0.65);
+      line-height: 1.7;
+      margin-bottom: 1.5rem;
+    }
+
+    .service-price {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      color: var(--sage-light);
+    }
+
+    /* ── PROCESS ── */
+    #process { background: var(--cream-dark); }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2rem;
+      margin-top: 3rem;
+      position: relative;
+    }
+
+    .steps::before {
+      content: '';
+      position: absolute;
+      top: 30px;
+      left: calc(12.5% + 16px);
+      right: calc(12.5% + 16px);
+      height: 1px;
+      background: var(--sage-light);
+    }
+
+    .step {
+      text-align: center;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.5s ease;
+    }
+
+    .step.visible { opacity: 1; transform: translateY(0); }
+
+    .step-num {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: var(--cream);
+      border: 2px solid var(--sage);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      color: var(--dark-green);
+      position: relative;
+      z-index: 1;
+    }
+
+    .step-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem;
+      color: var(--dark-green);
+      margin-bottom: 0.6rem;
+    }
+
+    .step-desc { font-size: 0.85rem; color: var(--text-light); line-height: 1.6; }
+
+    /* ── REVIEWS ── */
+    #reviews { background: var(--cream); }
+
+    .reviews-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+
+    .review-card {
+      padding: 2rem;
+      background: var(--cream-dark);
+      border-radius: 4px;
+      transition: transform var(--transition), box-shadow var(--transition);
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    .review-card.visible { opacity: 1; transform: translateY(0); }
+    .review-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(30,51,32,0.1); }
+
+    .review-quote {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3rem;
+      color: var(--sage);
+      line-height: 0.5;
+      margin-bottom: 1rem;
+    }
+
+    .review-text {
+      font-size: 0.9rem;
+      color: var(--text);
+      line-height: 1.8;
+      margin-bottom: 1.5rem;
+      font-style: italic;
+    }
+
+    .review-author strong {
+      display: block;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      color: var(--dark-green);
+    }
+
+    .review-author span { font-size: 0.8rem; color: var(--text-light); }
+
+    /* ── CONTACTS ── */
+    #contacts { background: var(--cream-dark); }
+
+    .contacts-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 5rem;
+      margin-top: 3rem;
+    }
+
+    .contact-info h3 {
+      font-size: 1.5rem;
+      color: var(--dark-green);
+      margin-bottom: 1.5rem;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .contact-icon {
+      width: 40px;
+      height: 40px;
+      background: var(--sage-light);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 1rem;
+    }
+
+    .contact-detail strong {
+      display: block;
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--sage-dark);
+      margin-bottom: 0.2rem;
+    }
+
+    .contact-detail a, .contact-detail p {
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    .contact-detail a:hover { color: var(--sage-dark); }
+
+    /* Form */
+    .contact-form h3 {
+      font-size: 1.5rem;
+      color: var(--dark-green);
+      margin-bottom: 0.5rem;
+    }
+
+    .form-subtitle {
+      font-size: 0.85rem;
+      color: var(--text-light);
+      margin-bottom: 2rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.2rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--sage-dark);
+      margin-bottom: 0.4rem;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 0.85rem 1rem;
+      border: 1px solid rgba(125,155,118,0.3);
+      border-radius: 2px;
+      background: var(--cream);
+      font-family: 'Jost', sans-serif;
+      font-size: 0.9rem;
+      color: var(--text);
+      transition: border-color var(--transition);
+      outline: none;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus { border-color: var(--sage-dark); }
+
+    .form-group input.error,
+    .form-group textarea.error { border-color: #c0392b; }
+
+    .form-group .error-msg {
+      font-size: 0.75rem;
+      color: #c0392b;
+      margin-top: 0.3rem;
+      display: none;
+    }
+
+    .form-group .error-msg.show { display: block; }
+
+    .form-group textarea { height: 110px; resize: vertical; }
+
+    .form-submit { width: 100%; padding: 1rem; font-size: 0.9rem; }
+
+    .form-success {
+      display: none;
+      text-align: center;
+      padding: 2rem;
+      background: rgba(125,155,118,0.15);
+      border: 1px solid var(--sage);
+      border-radius: 4px;
+    }
+
+    .form-success.show { display: block; }
+    .form-success .checkmark { font-size: 2rem; margin-bottom: 0.5rem; }
+    .form-success h4 { font-size: 1.3rem; color: var(--dark-green); margin-bottom: 0.5rem; }
+    .form-success p { font-size: 0.85rem; color: var(--text-light); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--dark-green);
+      color: var(--cream);
+      padding: 3rem 5%;
+    }
+
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+
+    .footer-brand strong {
+      display: block;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+    }
+
+    .footer-brand span {
+      font-size: 0.8rem;
+      opacity: 0.6;
+      letter-spacing: 0.05em;
+    }
+
+    .footer-phone a {
+      color: var(--cream);
+      text-decoration: none;
+      font-size: 1rem;
+      transition: color var(--transition);
+    }
+
+    .footer-phone a:hover { color: var(--sage-light); }
+
+    .footer-socials {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .social-link {
+      width: 40px;
+      height: 40px;
+      border: 1px solid rgba(168,193,161,0.3);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--cream);
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: all var(--transition);
+    }
+
+    .social-link:hover {
+      background: var(--sage-dark);
+      border-color: var(--sage-dark);
+    }
+
+    .footer-copy {
+      font-size: 0.75rem;
+      opacity: 0.5;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .hero-inner,
+      .about-grid,
+      .contacts-grid { grid-template-columns: 1fr; gap: 3rem; }
+
+      .hero-photo { order: -1; }
+      .photo-placeholder { width: 100%; max-width: 340px; }
+
+      .services-grid { grid-template-columns: 1fr; }
+      .steps { grid-template-columns: repeat(2, 1fr); }
+      .steps::before { display: none; }
+      .reviews-grid { grid-template-columns: 1fr; }
+
+      .nav-links {
+        display: none;
+        position: fixed;
+        top: 70px; left: 0; right: 0;
+        background: rgba(245,240,232,0.97);
+        flex-direction: column;
+        padding: 2rem;
+        gap: 1.5rem;
+        border-bottom: 1px solid rgba(125,155,118,0.2);
+        backdrop-filter: blur(12px);
+      }
+
+      .nav-links.open { display: flex; }
+      .hamburger { display: flex; }
+
+      .about-perks { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 600px) {
+      section { padding: 70px 5%; }
+      .steps { grid-template-columns: 1fr; }
+      .footer-inner { flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVIGATION -->
+  <nav id="navbar">
+    <a href="#hero" class="nav-logo">Ролан Ибраев</a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#about" onclick="closeMenu()">Обо мне</a></li>
+      <li><a href="#services" onclick="closeMenu()">Услуги</a></li>
+      <li><a href="#process" onclick="closeMenu()">Процесс</a></li>
+      <li><a href="#reviews" onclick="closeMenu()">Отзывы</a></li>
+      <li><a href="#contacts" class="btn btn-primary btn-sm" onclick="closeMenu()">Записаться</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="Меню" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-inner">
+      <div class="hero-text" id="heroText">
+        <span class="hero-tag">Мастер Коуч · Астана</span>
+        <h1 class="hero-title">Раскройте свой истинный потенциал</h1>
+        <p class="hero-subtitle">Индивидуальный коучинг для руководителей, предпринимателей и специалистов, готовых к трансформации. Работаем очно в Астане и онлайн.</p>
+        <div class="hero-buttons">
+          <a href="#contacts" class="btn btn-primary">Бесплатная консультация</a>
+          <a href="#about" class="btn btn-ghost">Узнать больше</a>
+        </div>
+        <div class="hero-stats">
+          <div class="stat">
+            <span class="stat-num">8+</span>
+            <span class="stat-label">лет опыта</span>
+          </div>
+          <div class="stat">
+            <span class="stat-num">300+</span>
+            <span class="stat-label">клиентов</span>
+          </div>
+          <div class="stat">
+            <span class="stat-num">94%</span>
+            <span class="stat-label">достигли цели</span>
+          </div>
+        </div>
+      </div>
+      <div class="hero-photo" id="heroPhoto">
+        <div class="photo-placeholder">
+          <div class="photo-name">
+            <strong>Ролан Ибраев</strong>
+            <span>Мастер Коуч (MCC)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="section-inner">
+      <div class="about-grid">
+        <div class="about-text">
+          <p class="section-tag">Обо мне</p>
+          <h2 class="section-title">Системный подход к вашему росту</h2>
+          <p>Я — Ролан Ибраев, Мастер Коуч (MCC) с более чем восемью годами практики. За это время я помог более 300 клиентам — руководителям, предпринимателям и специалистам — достичь значимых результатов в карьере и личной жизни.</p>
+          <p>Мой подход основан на глубинной работе с целями, ценностями и ограничивающими убеждениями. Я помогаю клиентам не просто решать текущие задачи, но и выстраивать устойчивые стратегии для долгосрочного роста.</p>
+          <div class="about-perks">
+            <div class="perk">
+              <div class="perk-title">Мастер Коуч (MCC)</div>
+              <p>Высший уровень сертификации ICF — гарантия профессионального стандарта</p>
+            </div>
+            <div class="perk">
+              <div class="perk-title">Системный подход</div>
+              <p>Комплексная работа со всеми сферами жизни клиента</p>
+            </div>
+            <div class="perk">
+              <div class="perk-title">Конфиденциальность</div>
+              <p>Абсолютная приватность всех сессий и личной информации</p>
+            </div>
+            <div class="perk">
+              <div class="perk-title">Ориентация на результат</div>
+              <p>Каждая сессия направлена на конкретный измеримый результат</p>
+            </div>
+          </div>
+        </div>
+        <div class="about-image">фото коуча</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section id="services">
+    <div class="section-inner">
+      <p class="section-tag">Услуги</p>
+      <h2 class="section-title">Форматы работы</h2>
+      <div class="services-grid">
+        <div class="service-card">
+          <div class="service-icon">✦</div>
+          <div class="service-name">Разовая сессия</div>
+          <p class="service-desc">60-минутная коучинговая сессия для проработки конкретного запроса или задачи. Идеально для знакомства с процессом или точечного решения вопроса.</p>
+          <div class="service-price">от 8 000 ₸</div>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">◈</div>
+          <div class="service-name">Программа 3 месяца</div>
+          <p class="service-desc">12 сессий за 3 месяца — полноценное сопровождение для достижения значимой цели. Включает поддержку между сессиями и персональный план развития.</p>
+          <div class="service-price">от 55 000 ₸</div>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">◉</div>
+          <div class="service-name">VIP-сопровождение</div>
+          <p class="service-desc">Интенсивная программа с приоритетным доступом и неограниченной поддержкой. Для руководителей и предпринимателей, готовых к трансформации.</p>
+          <div class="service-price">от 150 000 ₸/мес</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROCESS -->
+  <section id="process">
+    <div class="section-inner">
+      <p class="section-tag">Как мы работаем</p>
+      <h2 class="section-title">Процесс</h2>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-title">Знакомство</div>
+          <p class="step-desc">Бесплатная 30-минутная консультация. Знакомимся, обсуждаем ваш запрос и определяем, подходим ли друг другу.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-title">Диагностика</div>
+          <p class="step-desc">Глубинный анализ текущей ситуации, ресурсов и ограничений. Формулируем чёткие цели и критерии успеха.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-title">Работа</div>
+          <p class="step-desc">Регулярные сессии по согласованному плану. Между встречами — домашние задания и поддержка в мессенджере.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-title">Результат</div>
+          <p class="step-desc">Фиксируем достигнутые результаты, закрепляем новые стратегии и планируем дальнейший путь роста.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- REVIEWS -->
+  <section id="reviews">
+    <div class="section-inner">
+      <p class="section-tag">Отзывы</p>
+      <h2 class="section-title">Что говорят клиенты</h2>
+      <div class="reviews-grid">
+        <div class="review-card">
+          <div class="review-quote">"</div>
+          <p class="review-text">Работа с Роланом изменила мой подход к управлению командой. За 3 месяца я научился делегировать, перестал «тушить пожары» и наконец начал работать стратегически. Рекомендую каждому руководителю.</p>
+          <div class="review-author">
+            <strong>Асет Джаксыбеков</strong>
+            <span>CEO, IT-компания · Астана</span>
+          </div>
+        </div>
+        <div class="review-card">
+          <div class="review-quote">"</div>
+          <p class="review-text">Пришла в состоянии полного выгорания. Ролан помог разобраться в причинах, пересмотреть приоритеты и найти то, что действительно важно. Сейчас я в другой компании и абсолютно счастлива в карьере.</p>
+          <div class="review-author">
+            <strong>Алина Нурмагамбетова</strong>
+            <span>HR-директор · Алматы</span>
+          </div>
+        </div>
+        <div class="review-card">
+          <div class="review-quote">"</div>
+          <p class="review-text">Как предприниматель я постоянно застревал в операционке. Благодаря коучингу выстроил систему, нанял правильных людей и вышел из «белки в колесе». Бизнес вырос на 40% за полгода.</p>
+          <div class="review-author">
+            <strong>Данияр Сейткали</strong>
+            <span>Основатель, сеть кафе · Астана</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACTS -->
+  <section id="contacts">
+    <div class="section-inner">
+      <p class="section-tag">Контакты</p>
+      <h2 class="section-title">Начнём вместе</h2>
+      <div class="contacts-grid">
+        <div class="contact-info">
+          <h3>Как связаться</h3>
+          <div class="contact-item">
+            <div class="contact-icon">☎</div>
+            <div class="contact-detail">
+              <strong>Телефон</strong>
+              <a href="tel:+77012030889">+7 701 203 08 89</a>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">📍</div>
+            <div class="contact-detail">
+              <strong>Адрес</strong>
+              <p>г. Астана, ул. Шарля де Голля, 1</p>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">🕐</div>
+            <div class="contact-detail">
+              <strong>Режим работы</strong>
+              <p>Пн–Сб, 9:00–20:00</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="contact-form">
+          <h3>Бесплатная консультация</h3>
+          <p class="form-subtitle">Оставьте заявку — я свяжусь с вами в течение часа и мы согласуем удобное время.</p>
+          <form id="contactForm" novalidate>
+            <div class="form-group">
+              <label for="name">Ваше имя *</label>
+              <input type="text" id="name" name="name" placeholder="Как вас зовут?" />
+              <span class="error-msg" id="nameError">Пожалуйста, введите ваше имя</span>
+            </div>
+            <div class="form-group">
+              <label for="phone">Телефон *</label>
+              <input type="tel" id="phone" name="phone" placeholder="+7 ___ ___ __ __" />
+              <span class="error-msg" id="phoneError">Пожалуйста, введите номер телефона</span>
+            </div>
+            <div class="form-group">
+              <label for="request">Ваш запрос</label>
+              <textarea id="request" name="request" placeholder="Кратко опишите, с чем хотите поработать..."></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary form-submit">Отправить заявку</button>
+          </form>
+          <div class="form-success" id="formSuccess">
+            <div class="checkmark">✓</div>
+            <h4>Заявка отправлена!</h4>
+            <p>Я свяжусь с вами в течение часа. Спасибо за интерес!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <strong>Ролан Ибраев</strong>
+        <span>Мастер Коуч (MCC) · Астана · 2025</span>
+      </div>
+      <div class="footer-phone">
+        <a href="tel:+77012030889">+7 701 203 08 89</a>
+      </div>
+      <div class="footer-socials">
+        <a href="#" class="social-link" aria-label="Telegram">TG</a>
+        <a href="#" class="social-link" aria-label="Instagram">IG</a>
+      </div>
+      <div class="footer-copy">© 2025 Ролан Ибраев</div>
+    </div>
+  </footer>
+
+  <script>
+    // Navbar scroll effect
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      navbar.classList.toggle('scrolled', window.scrollY > 20);
+    });
+
+    // Mobile menu
+    function toggleMenu() {
+      document.getElementById('navLinks').classList.toggle('open');
+    }
+    function closeMenu() {
+      document.getElementById('navLinks').classList.remove('open');
+    }
+
+    // Fade-up on load for hero
+    window.addEventListener('load', () => {
+      document.getElementById('heroText').classList.add('visible');
+      document.getElementById('heroPhoto').classList.add('visible');
+    });
+
+    // Intersection Observer for scroll animations
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => entry.target.classList.add('visible'), i * 80);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll('.perk, .service-card, .step, .review-card').forEach(el => {
+      observer.observe(el);
+    });
+
+    // Form validation
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      let valid = true;
+
+      const name = document.getElementById('name');
+      const phone = document.getElementById('phone');
+      const nameError = document.getElementById('nameError');
+      const phoneError = document.getElementById('phoneError');
+
+      name.classList.remove('error');
+      phone.classList.remove('error');
+      nameError.classList.remove('show');
+      phoneError.classList.remove('show');
+
+      if (!name.value.trim()) {
+        name.classList.add('error');
+        nameError.classList.add('show');
+        valid = false;
+      }
+
+      if (!phone.value.trim() || phone.value.trim().length < 7) {
+        phone.classList.add('error');
+        phoneError.classList.add('show');
+        valid = false;
+      }
+
+      if (valid) {
+        this.style.display = 'none';
+        document.getElementById('formSuccess').classList.add('show');
+      }
+    });
+  </script>
+</body>
+</html>
