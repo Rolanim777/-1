@@ -475,7 +475,16 @@
       nameError.classList.remove('show'); phoneError.classList.remove('show');
       if (!name.value.trim()) { name.classList.add('error'); nameError.classList.add('show'); valid = false; }
       if (!phone.value.trim() || phone.value.trim().length < 7) { phone.classList.add('error'); phoneError.classList.add('show'); valid = false; }
-      if (valid) { this.style.display = 'none'; document.getElementById('formSuccess').classList.add('show'); }
+      if (valid) {
+        const clientName = name.value.trim();
+        const clientPhone = document.getElementById('phone').value.trim();
+        const clientRequest = document.getElementById('request').value.trim();
+        const msg = `Новая заявка с сайта!\n\n👤 Имя: ${clientName}\n📞 Телефон: ${clientPhone}${clientRequest ? '\n💬 Запрос: ' + clientRequest : ''}\n\nЖду вашего ответа!`;
+        const waUrl = 'https://wa.me/77012030889?text=' + encodeURIComponent(msg);
+        window.open(waUrl, '_blank');
+        this.style.display = 'none';
+        document.getElementById('formSuccess').classList.add('show');
+      }
     });
   </script>
 </body>
