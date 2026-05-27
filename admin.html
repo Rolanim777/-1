@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Админ-панель — Ролан Ибраев</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --sage: #7d9b76; --sage-light: #a8c1a1; --sage-dark: #4a6b43;
+      --cream: #f5f0e8; --cream-dark: #ede6d6; --dark-green: #1e3320;
+      --text: #2d2d2d; --text-light: #6b6b6b; --white: #fff;
+      --red: #c0392b; --green: #27ae60;
+    }
+    body { font-family: 'Jost', sans-serif; font-weight: 300; background: #f0ede6; color: var(--text); min-height: 100vh; }
+
+    /* LOGIN */
+    #loginScreen {
+      min-height: 100vh; display: flex; align-items: center; justify-content: center;
+      background: linear-gradient(135deg, var(--cream) 0%, var(--cream-dark) 100%);
+    }
+    .login-card {
+      background: var(--white); border-radius: 8px; padding: 3rem; width: 420px; max-width: 90vw;
+      box-shadow: 0 8px 40px rgba(30,51,32,0.12);
+    }
+    .login-card h1 { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; color: var(--dark-green); margin-bottom: 0.3rem; }
+    .login-card p { font-size: 0.85rem; color: var(--text-light); margin-bottom: 2rem; }
+    .login-card label { display: block; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--sage-dark); margin-bottom: 0.4rem; }
+    .login-card input { width: 100%; padding: 0.85rem 1rem; border: 1px solid rgba(125,155,118,0.4); border-radius: 4px; font-family: 'Jost', sans-serif; font-size: 0.9rem; outline: none; margin-bottom: 1.5rem; transition: border-color 0.2s; }
+    .login-card input:focus { border-color: var(--sage-dark); }
+    .login-error { font-size: 0.8rem; color: var(--red); margin-bottom: 1rem; display: none; }
+    .login-error.show { display: block; }
+
+    /* ADMIN LAYOUT */
+    #adminScreen { display: none; }
+    .admin-header {
+      background: var(--dark-green); color: var(--white);
+      padding: 0 2rem; height: 60px; display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 50;
+    }
+    .admin-header h1 { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 400; }
+    .admin-header-right { display: flex; align-items: center; gap: 1rem; }
+    .admin-header a { color: rgba(255,255,255,0.7); font-size: 0.8rem; text-decoration: none; transition: color 0.2s; }
+    .admin-header a:hover { color: var(--white); }
+
+    .admin-body { display: flex; min-height: calc(100vh - 60px); }
+
+    /* SIDEBAR */
+    .sidebar {
+      width: 220px; background: var(--dark-green); padding: 1.5rem 0;
+      flex-shrink: 0; position: sticky; top: 60px; height: calc(100vh - 60px); overflow-y: auto;
+    }
+    .sidebar-item {
+      display: flex; align-items: center; gap: 0.75rem;
+      padding: 0.85rem 1.5rem; color: rgba(255,255,255,0.6); font-size: 0.875rem;
+      cursor: pointer; transition: all 0.2s; border-left: 3px solid transparent;
+      user-select: none;
+    }
+    .sidebar-item:hover { color: var(--white); background: rgba(255,255,255,0.05); }
+    .sidebar-item.active { color: var(--white); border-left-color: var(--sage-light); background: rgba(255,255,255,0.08); }
+    .sidebar-item .icon { font-size: 1rem; width: 20px; text-align: center; }
+
+    /* CONTENT */
+    .admin-content { flex: 1; padding: 2rem; max-width: 860px; }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    .panel-title {
+      font-family: 'Cormorant Garamond', serif; font-size: 1.8rem;
+      color: var(--dark-green); margin-bottom: 0.4rem;
+    }
+    .panel-subtitle { font-size: 0.85rem; color: var(--text-light); margin-bottom: 2rem; }
+
+    .card {
+      background: var(--white); border-radius: 8px; padding: 1.75rem;
+      margin-bottom: 1.5rem; box-shadow: 0 2px 8px rgba(30,51,32,0.07);
+    }
+    .card-title {
+      font-family: 'Cormorant Garamond', serif; font-size: 1.1rem;
+      color: var(--dark-green); margin-bottom: 1.25rem;
+      padding-bottom: 0.75rem; border-bottom: 1px solid var(--cream-dark);
+    }
+
+    .field { margin-bottom: 1.2rem; }
+    .field:last-child { margin-bottom: 0; }
+    .field label { display: block; font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--sage-dark); margin-bottom: 0.4rem; }
+    .field input, .field textarea {
+      width: 100%; padding: 0.75rem 1rem; border: 1px solid #ddd; border-radius: 4px;
+      font-family: 'Jost', sans-serif; font-size: 0.9rem; color: var(--text);
+      outline: none; transition: border-color 0.2s;
+    }
+    .field input:focus, .field textarea:focus { border-color: var(--sage-dark); }
+    .field textarea { resize: vertical; min-height: 90px; }
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+    /* Photo upload */
+    .photo-upload-area {
+      border: 2px dashed rgba(125,155,118,0.4); border-radius: 8px;
+      padding: 2rem; text-align: center; cursor: pointer; transition: all 0.2s;
+      position: relative;
+    }
+    .photo-upload-area:hover, .photo-upload-area.drag-over {
+      border-color: var(--sage-dark); background: rgba(125,155,118,0.04);
+    }
+    .photo-upload-area input[type="file"] {
+      position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
+    }
+    .photo-preview {
+      width: 160px; height: 200px; object-fit: cover; object-position: top;
+      border-radius: 4px; margin: 0 auto 1rem; display: block;
+      border: 2px solid var(--sage-light);
+    }
+    .photo-placeholder-icon { font-size: 2.5rem; color: var(--sage-light); margin-bottom: 0.75rem; }
+    .photo-upload-text { font-size: 0.85rem; color: var(--text-light); line-height: 1.5; }
+    .photo-upload-text strong { color: var(--sage-dark); }
+    .photo-upload-hint { font-size: 0.75rem; color: var(--text-light); margin-top: 0.4rem; }
+
+    /* Service / Review items */
+    .repeat-item {
+      background: var(--cream); border-radius: 6px; padding: 1.25rem;
+      margin-bottom: 1rem; border: 1px solid var(--cream-dark);
+    }
+    .repeat-item-header {
+      font-family: 'Cormorant Garamond', serif; font-size: 1rem;
+      color: var(--dark-green); margin-bottom: 1rem;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.65rem 1.5rem; border-radius: 4px; font-family: 'Jost', sans-serif;
+      font-size: 0.85rem; font-weight: 400; letter-spacing: 0.05em;
+      cursor: pointer; border: none; transition: all 0.2s; text-decoration: none;
+    }
+    .btn-primary { background: var(--sage-dark); color: var(--white); }
+    .btn-primary:hover { background: var(--dark-green); }
+    .btn-primary:disabled { background: var(--sage-light); cursor: not-allowed; }
+    .btn-outline { background: transparent; color: var(--sage-dark); border: 1px solid var(--sage-dark); }
+    .btn-outline:hover { background: var(--sage-dark); color: var(--white); }
+    .btn-danger { background: transparent; color: var(--red); border: 1px solid rgba(192,57,43,0.3); font-size: 0.8rem; padding: 0.4rem 0.9rem; }
+    .btn-danger:hover { background: var(--red); color: var(--white); }
+
+    .save-bar {
+      position: fixed; bottom: 0; left: 220px; right: 0;
+      background: var(--white); border-top: 1px solid var(--cream-dark);
+      padding: 1rem 2rem; display: flex; align-items: center; gap: 1rem;
+      box-shadow: 0 -4px 20px rgba(30,51,32,0.08); z-index: 40;
+    }
+    .save-status { font-size: 0.85rem; flex: 1; }
+    .save-status.success { color: var(--green); }
+    .save-status.error { color: var(--red); }
+    .save-status.loading { color: var(--text-light); }
+
+    /* Spinner */
+    .spinner {
+      width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.4);
+      border-top-color: var(--white); border-radius: 50%;
+      animation: spin 0.7s linear infinite; display: none;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 700px) {
+      .sidebar { display: none; }
+      .save-bar { left: 0; }
+      .field-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginScreen">
+  <div class="login-card">
+    <h1>Админ-панель</h1>
+    <p>Войдите с помощью GitHub Personal Access Token</p>
+    <label for="tokenInput">GitHub Token</label>
+    <input type="password" id="tokenInput" placeholder="ghp_..." autocomplete="off" />
+    <div class="login-error" id="loginError">Неверный токен или нет доступа к репозиторию</div>
+    <button class="btn btn-primary" style="width:100%; justify-content:center;" onclick="doLogin()">
+      Войти
+    </button>
+    <p style="font-size:0.75rem; color:var(--text-light); margin-top:1.25rem; line-height:1.6;">
+      Токен нужен для сохранения изменений в GitHub. Он хранится только в памяти браузера и не передаётся третьим лицам.
+    </p>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div id="adminScreen">
+  <header class="admin-header">
+    <h1>Панель управления</h1>
+    <div class="admin-header-right">
+      <a href="index.html" target="_blank">↗ Открыть сайт</a>
+      <a href="#" onclick="doLogout()" style="color:rgba(255,255,255,0.5);">Выйти</a>
+    </div>
+  </header>
+
+  <div class="admin-body">
+    <nav class="sidebar">
+      <div class="sidebar-item active" onclick="showTab('photo')"><span class="icon">🖼</span> Фото</div>
+      <div class="sidebar-item" onclick="showTab('hero')"><span class="icon">✦</span> Главная</div>
+      <div class="sidebar-item" onclick="showTab('about')"><span class="icon">👤</span> Обо мне</div>
+      <div class="sidebar-item" onclick="showTab('services')"><span class="icon">◈</span> Услуги</div>
+      <div class="sidebar-item" onclick="showTab('reviews')"><span class="icon">💬</span> Отзывы</div>
+      <div class="sidebar-item" onclick="showTab('contacts')"><span class="icon">📞</span> Контакты</div>
+    </nav>
+
+    <main class="admin-content">
+
+      <!-- PHOTO -->
+      <div class="tab-panel active" id="tab-photo">
+        <div class="panel-title">Фото коуча</div>
+        <p class="panel-subtitle">Загрузите фотографию — она появится на сайте в секциях «Главная» и «Обо мне».</p>
+        <div class="card">
+          <div class="card-title">Загрузить фото</div>
+          <div class="photo-upload-area" id="photoDropZone">
+            <input type="file" id="photoFile" accept="image/jpeg,image/png,image/webp" onchange="onPhotoSelected(this)" />
+            <img id="photoPreviewImg" class="photo-preview" src="" alt="" style="display:none;" />
+            <div id="photoPlaceholderBlock">
+              <div class="photo-placeholder-icon">📷</div>
+              <div class="photo-upload-text">
+                <strong>Нажмите или перетащите фото</strong><br>
+                Рекомендуемый размер: 600×800 px
+              </div>
+              <div class="photo-upload-hint">JPG, PNG, WebP · до 5 МБ</div>
+            </div>
+          </div>
+          <p style="font-size:0.8rem; color:var(--text-light); margin-top:1rem;" id="currentPhotoStatus">Текущее фото: не загружено</p>
+        </div>
+      </div>
+
+      <!-- HERO -->
+      <div class="tab-panel" id="tab-hero">
+        <div class="panel-title">Главная секция</div>
+        <p class="panel-subtitle">Заголовок, подзаголовок и статистика на первом экране.</p>
+        <div class="card">
+          <div class="card-title">Текст</div>
+          <div class="field">
+            <label>Заголовок</label>
+            <input type="text" id="heroTitle" />
+          </div>
+          <div class="field">
+            <label>Подзаголовок</label>
+            <textarea id="heroSubtitle"></textarea>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Статистика</div>
+          <div class="field-row">
+            <div class="field"><label>Лет опыта</label><input type="text" id="statExp" placeholder="8+" /></div>
+            <div class="field"><label>Клиентов</label><input type="text" id="statClients" placeholder="300+" /></div>
+          </div>
+          <div class="field"><label>% достигли цели</label><input type="text" id="statSuccess" placeholder="94%" /></div>
+        </div>
+      </div>
+
+      <!-- ABOUT -->
+      <div class="tab-panel" id="tab-about">
+        <div class="panel-title">Обо мне</div>
+        <p class="panel-subtitle">Биография в секции «Обо мне».</p>
+        <div class="card">
+          <div class="card-title">Биография</div>
+          <div class="field">
+            <label>Первый абзац</label>
+            <textarea id="aboutBio1" style="min-height:120px;"></textarea>
+          </div>
+          <div class="field">
+            <label>Второй абзац</label>
+            <textarea id="aboutBio2" style="min-height:120px;"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- SERVICES -->
+      <div class="tab-panel" id="tab-services">
+        <div class="panel-title">Услуги</div>
+        <p class="panel-subtitle">Три тарифных пакета.</p>
+        <div id="servicesFields"></div>
+      </div>
+
+      <!-- REVIEWS -->
+      <div class="tab-panel" id="tab-reviews">
+        <div class="panel-title">Отзывы</div>
+        <p class="panel-subtitle">Три отзыва клиентов.</p>
+        <div id="reviewsFields"></div>
+      </div>
+
+      <!-- CONTACTS -->
+      <div class="tab-panel" id="tab-contacts">
+        <div class="panel-title">Контакты</div>
+        <p class="panel-subtitle">Телефон, адрес и ссылки на соцсети.</p>
+        <div class="card">
+          <div class="card-title">Контактная информация</div>
+          <div class="field"><label>Телефон</label><input type="text" id="cPhone" placeholder="+7 701 203 08 89" /></div>
+          <div class="field"><label>Адрес</label><input type="text" id="cAddress" /></div>
+          <div class="field"><label>Режим работы</label><input type="text" id="cHours" /></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Социальные сети</div>
+          <div class="field"><label>Ссылка Telegram</label><input type="url" id="cTelegram" placeholder="https://t.me/username" /></div>
+          <div class="field"><label>Ссылка Instagram</label><input type="url" id="cInstagram" placeholder="https://instagram.com/username" /></div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- SAVE BAR -->
+  <div class="save-bar">
+    <div class="save-status" id="saveStatus"></div>
+    <button class="btn btn-outline" onclick="loadFromGitHub()">↺ Сбросить</button>
+    <button class="btn btn-primary" id="saveBtn" onclick="saveAll()">
+      <span class="spinner" id="saveSpinner"></span>
+      Сохранить изменения
+    </button>
+  </div>
+</div>
+
+<script>
+  const OWNER = 'Rolanim777';
+  const REPO = '-1';
+  const API = `https://api.github.com/repos/${OWNER}/${REPO}/contents/`;
+  let TOKEN = '';
+  let currentContent = {};
+  let newPhotoFile = null;
+  let newPhotoBase64 = '';
+
+  // ── Auth ──
+  async function doLogin() {
+    const t = document.getElementById('tokenInput').value.trim();
+    if (!t) return;
+    TOKEN = t;
+    const err = document.getElementById('loginError');
+    err.classList.remove('show');
+    try {
+      const res = await ghGet('content.json');
+      if (res.status === 404 || res.ok) {
+        sessionStorage.setItem('ghToken', t);
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('adminScreen').style.display = 'block';
+        await loadFromGitHub();
+      } else {
+        throw new Error();
+      }
+    } catch {
+      err.classList.add('show');
+      TOKEN = '';
+    }
+  }
+
+  function doLogout() {
+    sessionStorage.removeItem('ghToken');
+    TOKEN = '';
+    document.getElementById('adminScreen').style.display = 'none';
+    document.getElementById('loginScreen').style.display = 'flex';
+  }
+
+  // Auto-login from session
+  window.addEventListener('load', () => {
+    const t = sessionStorage.getItem('ghToken');
+    if (t) {
+      document.getElementById('tokenInput').value = t;
+      doLogin();
+    }
+    document.getElementById('tokenInput').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+
+    // Drag & drop
+    const zone = document.getElementById('photoDropZone');
+    zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
+    zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+    zone.addEventListener('drop', e => {
+      e.preventDefault(); zone.classList.remove('drag-over');
+      const file = e.dataTransfer.files[0];
+      if (file && file.type.startsWith('image/')) processPhotoFile(file);
+    });
+  });
+
+  // ── GitHub API ──
+  function ghHeaders() {
+    return { 'Authorization': `token ${TOKEN}`, 'Content-Type': 'application/json', 'Accept': 'application/vnd.github+json' };
+  }
+
+  async function ghGet(path) {
+    return fetch(API + path, { headers: ghHeaders() });
+  }
+
+  async function ghPut(path, content64, sha, message) {
+    const body = { message, content: content64 };
+    if (sha) body.sha = sha;
+    return fetch(API + path, { method: 'PUT', headers: ghHeaders(), body: JSON.stringify(body) });
+  }
+
+  async function getFileSha(path) {
+    const res = await ghGet(path);
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data.sha || null;
+  }
+
+  function toBase64Unicode(str) {
+    const bytes = new TextEncoder().encode(str);
+    let bin = '';
+    bytes.forEach(b => bin += String.fromCharCode(b));
+    return btoa(bin);
+  }
+
+  function fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+      const r = new FileReader();
+      r.onload = e => resolve(e.target.result.split(',')[1]);
+      r.onerror = reject;
+      r.readAsDataURL(file);
+    });
+  }
+
+  // ── Load ──
+  async function loadFromGitHub() {
+    setStatus('loading', 'Загрузка данных...');
+    try {
+      const res = await ghGet('content.json');
+      if (res.ok) {
+        const data = await res.json();
+        const raw = atob(data.content.replace(/\n/g, ''));
+        const bytes = Uint8Array.from(raw, c => c.charCodeAt(0));
+        currentContent = JSON.parse(new TextDecoder().decode(bytes));
+      } else {
+        currentContent = {};
+      }
+      fillForm(currentContent);
+
+      // check current photo
+      const photoRes = await ghGet('images/coach.jpg');
+      if (photoRes.ok) {
+        const pd = await photoRes.json();
+        document.getElementById('currentPhotoStatus').textContent = 'Текущее фото: загружено ✓';
+        document.getElementById('photoPreviewImg').src = `https://raw.githubusercontent.com/${OWNER}/${REPO}/main/images/coach.jpg?t=${Date.now()}`;
+        document.getElementById('photoPreviewImg').style.display = 'block';
+        document.getElementById('photoPlaceholderBlock').style.display = 'none';
+      }
+
+      setStatus('', '');
+    } catch (e) {
+      setStatus('error', 'Ошибка загрузки данных');
+    }
+  }
+
+  function fillForm(d) {
+    // Hero
+    setVal('heroTitle', d.hero?.title);
+    setVal('heroSubtitle', d.hero?.subtitle);
+    setVal('statExp', d.hero?.stats?.experience);
+    setVal('statClients', d.hero?.stats?.clients);
+    setVal('statSuccess', d.hero?.stats?.success);
+    // About
+    setVal('aboutBio1', d.about?.paragraph1);
+    setVal('aboutBio2', d.about?.paragraph2);
+    // Services
+    buildServiceFields(d.services || []);
+    // Reviews
+    buildReviewFields(d.reviews || []);
+    // Contacts
+    setVal('cPhone', d.contacts?.phone);
+    setVal('cAddress', d.contacts?.address);
+    setVal('cHours', d.contacts?.hours);
+    setVal('cTelegram', d.contacts?.telegram === '#' ? '' : d.contacts?.telegram);
+    setVal('cInstagram', d.contacts?.instagram === '#' ? '' : d.contacts?.instagram);
+  }
+
+  function setVal(id, val) {
+    const el = document.getElementById(id);
+    if (el && val !== undefined && val !== null) el.value = val;
+  }
+
+  function buildServiceFields(services) {
+    const container = document.getElementById('servicesFields');
+    container.innerHTML = services.map((s, i) => `
+      <div class="card">
+        <div class="card-title">Услуга ${i + 1}</div>
+        <div class="repeat-item">
+          <div class="field"><label>Название</label><input type="text" id="svc_name_${i}" value="${esc(s.name)}" /></div>
+          <div class="field"><label>Описание</label><textarea id="svc_desc_${i}">${esc(s.desc)}</textarea></div>
+          <div class="field-row">
+            <div class="field"><label>Цена</label><input type="text" id="svc_price_${i}" value="${esc(s.price)}" /></div>
+            <div class="field"><label>Иконка</label><input type="text" id="svc_icon_${i}" value="${esc(s.icon)}" /></div>
+          </div>
+        </div>
+      </div>`).join('');
+  }
+
+  function buildReviewFields(reviews) {
+    const container = document.getElementById('reviewsFields');
+    container.innerHTML = reviews.map((r, i) => `
+      <div class="card">
+        <div class="card-title">Отзыв ${i + 1}</div>
+        <div class="repeat-item">
+          <div class="field"><label>Имя клиента</label><input type="text" id="rev_name_${i}" value="${esc(r.name)}" /></div>
+          <div class="field"><label>Должность / Город</label><input type="text" id="rev_role_${i}" value="${esc(r.role)}" /></div>
+          <div class="field"><label>Текст отзыва</label><textarea id="rev_text_${i}" style="min-height:100px;">${esc(r.text)}</textarea></div>
+        </div>
+      </div>`).join('');
+  }
+
+  function esc(s) { return (s || '').replace(/"/g, '&quot;').replace(/</g, '&lt;'); }
+
+  // ── Photo ──
+  function onPhotoSelected(input) {
+    if (input.files && input.files[0]) processPhotoFile(input.files[0]);
+  }
+
+  function processPhotoFile(file) {
+    if (file.size > 5 * 1024 * 1024) { alert('Файл слишком большой. Максимум 5 МБ.'); return; }
+    newPhotoFile = file;
+    const reader = new FileReader();
+    reader.onload = e => {
+      newPhotoBase64 = e.target.result.split(',')[1];
+      document.getElementById('photoPreviewImg').src = e.target.result;
+      document.getElementById('photoPreviewImg').style.display = 'block';
+      document.getElementById('photoPlaceholderBlock').style.display = 'none';
+      document.getElementById('currentPhotoStatus').textContent = `Выбрано: ${file.name} — нажмите «Сохранить»`;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  // ── Save ──
+  async function saveAll() {
+    const btn = document.getElementById('saveBtn');
+    const spinner = document.getElementById('saveSpinner');
+    btn.disabled = true;
+    spinner.style.display = 'block';
+    setStatus('loading', 'Сохранение...');
+
+    try {
+      // Upload photo if new
+      if (newPhotoFile && newPhotoBase64) {
+        setStatus('loading', 'Загрузка фото...');
+        const sha = await getFileSha('images/coach.jpg');
+        const r = await ghPut('images/coach.jpg', newPhotoBase64, sha, 'Update coach photo');
+        if (!r.ok) throw new Error('Ошибка загрузки фото');
+        currentContent.photo = 'images/coach.jpg';
+        newPhotoFile = null;
+        newPhotoBase64 = '';
+        document.getElementById('currentPhotoStatus').textContent = 'Текущее фото: загружено ✓';
+      }
+
+      // Build content object
+      const numServices = document.querySelectorAll('[id^="svc_name_"]').length;
+      const numReviews = document.querySelectorAll('[id^="rev_name_"]').length;
+
+      const data = {
+        photo: currentContent.photo || '',
+        hero: {
+          title: getVal('heroTitle'),
+          subtitle: getVal('heroSubtitle'),
+          stats: {
+            experience: getVal('statExp'),
+            clients: getVal('statClients'),
+            success: getVal('statSuccess')
+          }
+        },
+        about: {
+          paragraph1: getVal('aboutBio1'),
+          paragraph2: getVal('aboutBio2')
+        },
+        services: Array.from({ length: numServices }, (_, i) => ({
+          icon: getVal(`svc_icon_${i}`),
+          name: getVal(`svc_name_${i}`),
+          desc: getVal(`svc_desc_${i}`),
+          price: getVal(`svc_price_${i}`)
+        })),
+        reviews: Array.from({ length: numReviews }, (_, i) => ({
+          text: getVal(`rev_text_${i}`),
+          name: getVal(`rev_name_${i}`),
+          role: getVal(`rev_role_${i}`)
+        })),
+        contacts: {
+          phone: getVal('cPhone'),
+          address: getVal('cAddress'),
+          hours: getVal('cHours'),
+          telegram: getVal('cTelegram') || '#',
+          instagram: getVal('cInstagram') || '#'
+        }
+      };
+
+      setStatus('loading', 'Сохранение контента...');
+      const json = JSON.stringify(data, null, 2);
+      const sha = await getFileSha('content.json');
+      const r2 = await ghPut('content.json', toBase64Unicode(json), sha, 'Update site content via admin panel');
+      if (!r2.ok) throw new Error('Ошибка сохранения content.json');
+
+      currentContent = data;
+      setStatus('success', '✓ Изменения сохранены! Сайт обновится через 1–2 минуты.');
+      setTimeout(() => setStatus('', ''), 6000);
+    } catch (e) {
+      setStatus('error', '✗ Ошибка: ' + (e.message || 'попробуйте ещё раз'));
+    } finally {
+      btn.disabled = false;
+      spinner.style.display = 'none';
+    }
+  }
+
+  function getVal(id) {
+    const el = document.getElementById(id);
+    return el ? el.value.trim() : '';
+  }
+
+  function setStatus(type, msg) {
+    const el = document.getElementById('saveStatus');
+    el.className = 'save-status' + (type ? ' ' + type : '');
+    el.textContent = msg;
+  }
+
+  // ── Tabs ──
+  function showTab(name) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+    event.currentTarget.classList.add('active');
+  }
+</script>
+</body>
+</html>
